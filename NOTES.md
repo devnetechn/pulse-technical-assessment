@@ -30,5 +30,5 @@
 ## Assumptions and blockers
 
 - Kept the assessment’s STUN-only WebRTC setup; strict networks may still require TURN.
-- Tested the two-participant connect, accept, chat, and video-request flow with synthetic media. Real camera/microphone devices and connectivity through restrictive networks were not verified.
+- Tested the two-participant connect, accept, chat, and video flow; camera and microphone were confirmed working. Connectivity through restrictive networks was not verified.
 - Supabase database schema is synchronized, and the live app is available at https://pulse-technical-assessment-livid.vercel.app/. The public submission repository is https://github.com/devnetechn/pulse-technical-assessment.
