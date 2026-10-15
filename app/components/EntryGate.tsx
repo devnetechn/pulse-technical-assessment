@@ -43,7 +43,7 @@ export default function EntryGate({
   }
 
   return (
-    <div className="pulse-gate relative flex min-h-screen flex-col overflow-x-hidden px-6 text-zinc-100">
+    <div className="pulse-gate relative flex min-h-dvh flex-col overflow-x-hidden px-6 text-zinc-100">
       <div className="pulse-gate-grid pointer-events-none absolute inset-0" />
       <div className="pulse-gate-glow pulse-gate-glow-one pointer-events-none absolute" />
       <div className="pulse-gate-glow pulse-gate-glow-two pointer-events-none absolute" />
@@ -156,6 +156,9 @@ export default function EntryGate({
         </section>
       </main>
 
+      <footer className="relative mx-auto flex w-full max-w-7xl items-center justify-center border-t border-white/[0.07] py-4 text-[11px] text-zinc-600">
+        <span>Pulse · A world of hellos</span>
+      </footer>
     </div>
   );
 }
