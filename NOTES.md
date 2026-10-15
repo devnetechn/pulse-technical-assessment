@@ -6,12 +6,13 @@
 - Fixed the chat data-channel type mismatch and applied queued ICE candidates after the remote description is set.
 - Added reliable connection claiming/release, request timeouts, leave cleanup, and clearer reconnect/error feedback.
 - Privacy offsets now use a great-circle calculation, preserving the 1–3 km distance at high latitudes and across the date line.
-- Verified with TypeScript, ESLint, Prisma schema validation, and a production build. A live two-user test still needs configured Postgres and Mapbox credentials.
+- Verified with TypeScript, ESLint, Prisma schema validation, and a production build. The database schema was pushed to Supabase and the deployed app was tested with two participants.
 
 ## Phase 2 — Make it good
 
 - Reworked the entry screen, live-map chrome, connection prompts, chat, and video UI into a cohesive dark, soft-green visual system with responsive layouts, motion, and reduced-motion support.
 - Added accessible labels, visible focus styles, clearer connection status, and a useful empty-map/no-token state.
+- Fixed landing-page overflow below the footer by clipping decorative background glows to the page container; verified the footer sits at the document bottom on mobile and desktop.
 
 ## Phase 3 — Make it secure
 
@@ -24,8 +25,10 @@
 
 - Added optional, rotating “Conversation sparks” to help start a chat. Prompts stay in the browser until the user chooses one; using a prompt puts it in the composer for review and editing before sending.
 - Kept the feature ephemeral and peer-to-peer, with no new profile or message storage.
+- Published the completed assessment to the public submission repository and deployed the app to Vercel.
 
 ## Assumptions and blockers
 
 - Kept the assessment’s STUN-only WebRTC setup; strict networks may still require TURN.
-- No working `DATABASE_URL`, Mapbox token, or Vercel project credentials were available here. The database push, live two-participant test, and Vercel deployment remain blocked on those credentials. The public submission repository was created separately from the assessment origin and pushed to `https://github.com/devnetechn/pulse-technical-assessment`.
+- Tested the two-participant connect, accept, chat, and video-request flow with synthetic media. Real camera/microphone devices and connectivity through restrictive networks were not verified.
+- Supabase database schema is synchronized, and the live app is available at https://pulse-technical-assessment-livid.vercel.app/. The public submission repository is https://github.com/devnetechn/pulse-technical-assessment.
