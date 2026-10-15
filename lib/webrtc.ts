@@ -5,6 +5,14 @@ export type PeerControl =
   | "video-decline"
   | "video-end";
 
+const MAX_CHAT_LENGTH = 2000;
+const PEER_CONTROLS = new Set<string>([
+  "video-request",
+  "video-accept",
+  "video-decline",
+  "video-end",
+]);
+
 interface PeerCallbacks {
   onSignal: (type: DescType, payload: string) => void;
   onChat: (text: string) => void;
@@ -41,12 +49,15 @@ export class PeerSession {
     };
 
     this.pc.onnegotiationneeded = async () => {
+      if (this.closed) return;
       try {
         this.makingOffer = true;
         await this.pc.setLocalDescription();
         if (this.pc.localDescription) {
           this.cb.onSignal("offer", JSON.stringify(this.pc.localDescription));
         }
+      } catch {
+        this.cb.onConnectionState("failed");
       } finally {
         this.makingOffer = false;
       }
@@ -76,9 +87,17 @@ export class PeerSession {
     dc.onmessage = (e) => {
       try {
         const msg = JSON.parse(e.data as string);
-        if (msg.t === "chat" && typeof msg.text === "string") {
+        if (
+          msg.t === "chat" &&
+          typeof msg.text === "string" &&
+          msg.text.length <= MAX_CHAT_LENGTH
+        ) {
           this.cb.onChat(msg.text);
-        } else if (msg.t === "ctrl" && typeof msg.ctrl === "string") {
+        } else if (
+          msg.t === "ctrl" &&
+          typeof msg.ctrl === "string" &&
+          PEER_CONTROLS.has(msg.ctrl)
+        ) {
           this.cb.onControl(msg.ctrl as PeerControl);
         }
       } catch {}
@@ -90,13 +109,12 @@ export class PeerSession {
     const data = JSON.parse(payload);
 
     if (type === "ice") {
+      if (this.ignoreOffer) return;
       if (!this.pc.remoteDescription) {
         this.pendingCandidates.push(data);
         return;
       }
-      try {
-        await this.pc.addIceCandidate(data);
-      } catch {}
+      await this.pc.addIceCandidate(data);
       return;
     }
 
@@ -105,10 +123,13 @@ export class PeerSession {
       desc.type === "offer" &&
       (this.makingOffer || this.pc.signalingState !== "stable");
     this.ignoreOffer = !this.polite && offerCollision;
-    if (this.ignoreOffer) return;
+    if (this.ignoreOffer) {
+      this.pendingCandidates = [];
+      return;
+    }
 
-    await this.flushPendingCandidates();
     await this.pc.setRemoteDescription(desc);
+    await this.flushPendingCandidates();
     if (desc.type === "offer") {
       await this.pc.setLocalDescription();
       if (this.pc.localDescription) {
@@ -122,14 +143,15 @@ export class PeerSession {
     const queued = this.pendingCandidates;
     this.pendingCandidates = [];
     for (const candidate of queued) {
-      try {
-        await this.pc.addIceCandidate(candidate);
-      } catch {}
+      await this.pc.addIceCandidate(candidate);
     }
   }
 
   sendChat(text: string) {
-    this.safeSend({ t: "msg", text });
+    if (text.length > MAX_CHAT_LENGTH) {
+      throw new RangeError("Chat messages must be 2000 characters or fewer.");
+    }
+    this.safeSend({ t: "chat", text });
   }
 
   sendControl(ctrl: PeerControl) {

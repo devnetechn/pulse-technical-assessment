@@ -3,7 +3,7 @@
 // offset is generated each session (this runs once per join), so the same user
 // lands somewhere different every time.
 
-const KM_PER_DEG_LAT = 111.32;
+const EARTH_RADIUS_KM = 6371.0088;
 
 export function applyPrivacyOffset(
   lat: number,
@@ -11,21 +11,24 @@ export function applyPrivacyOffset(
 ): { lat: number; lng: number } {
   const distanceKm = 1 + Math.random() * 2; // 1–3 km
   const bearing = Math.random() * 2 * Math.PI; // random direction
-
-  const dLat = (distanceKm * Math.cos(bearing)) / KM_PER_DEG_LAT;
+  const angularDistance = distanceKm / EARTH_RADIUS_KM;
   const latRad = (lat * Math.PI) / 180;
-  const dLng =
-    (distanceKm * Math.sin(bearing)) /
-    (KM_PER_DEG_LAT * Math.cos(latRad) || KM_PER_DEG_LAT);
+  const lngRad = (lng * Math.PI) / 180;
+  const offsetLat = Math.asin(
+    Math.sin(latRad) * Math.cos(angularDistance) +
+      Math.cos(latRad) * Math.sin(angularDistance) * Math.cos(bearing),
+  );
+  const offsetLng =
+    lngRad +
+    Math.atan2(
+      Math.sin(bearing) * Math.sin(angularDistance) * Math.cos(latRad),
+      Math.cos(angularDistance) - Math.sin(latRad) * Math.sin(offsetLat),
+    );
 
   return {
-    lat: clamp(lat + dLat, -90, 90),
-    lng: wrapLng(lng + dLng),
+    lat: (offsetLat * 180) / Math.PI,
+    lng: wrapLng((offsetLng * 180) / Math.PI),
   };
-}
-
-function clamp(v: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, v));
 }
 
 function wrapLng(lng: number): number {
