@@ -156,7 +156,7 @@ export default function EntryGate({
         </section>
       </main>
 
-      <footer className="relative mx-auto flex w-full max-w-7xl items-center justify-center border-t border-white/[0.07] py-4 text-[11px] text-zinc-600">
+      <footer className="relative mx-auto flex w-full max-w-7xl items-center justify-center border-t border-white/[0.07] pb-0 pt-4 text-[11px] text-zinc-600">
         <span>Pulse · A world of hellos</span>
       </footer>
     </div>
