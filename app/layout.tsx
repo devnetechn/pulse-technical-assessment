@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pulse",
-  description: "A living globe of anonymous strangers. Tap a dot, start talking.",
+  title: "Pulse — A world of hellos",
+  description:
+    "Find an open signal on the map and share a moment with someone new. No profiles, no history.",
 };
 
 export default function RootLayout({

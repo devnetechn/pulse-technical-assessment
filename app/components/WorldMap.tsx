@@ -5,7 +5,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import type { Map as MapboxMap, Marker } from "mapbox-gl";
 import type { PeerDot } from "@/lib/types";
 
-const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "pk.eyJ1IjoicHVsc2UtbWFwIiwiYSI6ImNrMDBkZW1vMDAwMDAwMDAifQ.AAAAAAAAAAAAAAAAAAAAAA";
+const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN?.trim() ?? "";
 
 function dotColor(id: string): string {
   let hash = 0;
@@ -31,6 +31,7 @@ export default function WorldMap({
   const markersRef = useRef<Map<string, Marker>>(new Map());
   const meMarkerRef = useRef<Marker | null>(null);
   const [ready, setReady] = useState(false);
+  const [mapError, setMapError] = useState(false);
 
   // Marker click handlers are bound once, so read the live click handler +
   // connectability through refs (synced in an effect, never during render).
@@ -60,7 +61,13 @@ export default function WorldMap({
         attributionControl: true,
       });
       map.on("load", () => {
-        if (!cancelled) setReady(true);
+        if (!cancelled) {
+          setMapError(false);
+          setReady(true);
+        }
+      });
+      map.on("error", () => {
+        if (!cancelled) setMapError(true);
       });
       mapRef.current = map;
     })();
@@ -74,6 +81,7 @@ export default function WorldMap({
       mapRef.current?.remove();
       mapRef.current = null;
       setReady(false);
+      setMapError(false);
     };
     // `me` is only read for the initial center; we don't want to re-init on change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,9 +132,10 @@ export default function WorldMap({
         let marker = markers.get(peer.id);
         if (!marker) {
           const el = document.createElement("button");
+          el.type = "button";
           el.className = "pulse-dot";
           el.style.background = dotColor(peer.id);
-          el.title = "Tap to connect";
+          el.setAttribute("aria-label", "Connect with a stranger");
           el.addEventListener("click", (e) => {
             e.stopPropagation();
             if (canConnectRef.current) onPeerClickRef.current(peer.id);
@@ -136,7 +145,14 @@ export default function WorldMap({
             .addTo(map);
           markers.set(peer.id, marker);
         }
-        marker.getElement().style.opacity = peer.busy ? "0.35" : "1";
+        const element = marker.getElement() as HTMLButtonElement;
+        element.disabled = peer.busy || !canConnect;
+        element.title = peer.busy
+          ? "Already connecting"
+          : canConnect
+            ? "Tap to connect"
+            : "Finish your current chat first";
+        element.style.opacity = peer.busy ? "0.35" : "1";
       }
 
       // Drop markers for peers that went offline / got filtered out.
@@ -151,25 +167,25 @@ export default function WorldMap({
     return () => {
       cancelled = true;
     };
-  }, [peers, ready]);
+  }, [canConnect, peers, ready]);
 
   return (
     <div className="absolute inset-0">
       <div ref={containerRef} className="h-full w-full bg-zinc-900" />
 
-      {!TOKEN && (
+      {(!TOKEN || mapError) && (
         <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
-          <p className="max-w-md rounded-lg bg-zinc-800 p-4 text-sm text-zinc-200">
-            Set{" "}
-            <code className="text-emerald-400">NEXT_PUBLIC_MAPBOX_TOKEN</code> in{" "}
-            <code>.env</code> to load the map.
+          <p className="max-w-md rounded-2xl border border-white/10 bg-zinc-950/90 p-5 text-sm text-zinc-200 shadow-2xl backdrop-blur">
+            {TOKEN
+              ? "The map could not load. Check your Mapbox token and connection."
+              : "Add NEXT_PUBLIC_MAPBOX_TOKEN to your environment to load the map."}
           </p>
         </div>
       )}
 
-      {/* Online count */}
-      <div className="absolute bottom-4 left-4 rounded-full bg-zinc-900/80 px-3 py-1.5 text-xs text-zinc-300 backdrop-blur">
-        {peers.length} online
+      <div className="pulse-online-count absolute bottom-5 left-5 z-[2] flex items-center gap-2 rounded-full px-4 py-2 text-xs text-zinc-200">
+        <span className="pulse-live-indicator" />
+        <span>{peers.length + (me ? 1 : 0)} online</span>
       </div>
     </div>
   );

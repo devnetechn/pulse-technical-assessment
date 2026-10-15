@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #07100f;
+  --foreground: #edf4f0;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -12,37 +13,267 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Live user dots on the map */
-.pulse-dot {
-  width: 14px;
-  height: 14px;
+button,
+input {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #a7f3d0;
+  outline-offset: 3px;
+}
+
+.pulse-gate {
+  background:
+    radial-gradient(ellipse at 58% 48%, rgba(19, 54, 45, 0.35), transparent 44%),
+    linear-gradient(140deg, #07100f 10%, #0b1414 55%, #0c1714);
+}
+
+.pulse-gate-grid {
+  background-image:
+    linear-gradient(rgba(207, 255, 235, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(207, 255, 235, 0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, black, transparent 90%);
+}
+
+.pulse-gate-glow {
   border-radius: 9999px;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  cursor: pointer;
+  filter: blur(90px);
+}
+
+.pulse-gate-glow-one {
+  top: 18%;
+  right: -9rem;
+  width: 24rem;
+  height: 24rem;
+  background: rgba(45, 212, 191, 0.1);
+}
+
+.pulse-gate-glow-two {
+  bottom: -16rem;
+  left: 12%;
+  width: 28rem;
+  height: 28rem;
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.pulse-logo-mark {
+  position: relative;
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(167, 243, 208, 0.54);
+  border-radius: 9999px;
+  box-shadow: 0 0 26px rgba(52, 211, 153, 0.18), inset 0 0 14px rgba(52, 211, 153, 0.1);
+}
+
+.pulse-logo-mark::before,
+.pulse-logo-mark::after,
+.pulse-logo-mark span {
+  position: absolute;
+  display: block;
+  border: 1px solid rgba(167, 243, 208, 0.55);
+  border-radius: 9999px;
+  content: "";
+}
+
+.pulse-logo-mark::before {
+  width: 18px;
+  height: 18px;
+}
+
+.pulse-logo-mark::after {
+  width: 7px;
+  height: 7px;
+  border: 0;
+  background: #a7f3d0;
+  box-shadow: 0 0 12px rgba(167, 243, 208, 0.85);
+}
+
+.pulse-logo-mark span {
+  width: 27px;
+  height: 12px;
+  border-color: rgba(167, 243, 208, 0.28);
+}
+
+.pulse-gradient-text {
+  color: #b6f4d8;
+  background: linear-gradient(100deg, #d5f9e9 0%, #8ae2bd 48%, #8aaea1 100%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.pulse-enter-button {
+  background: linear-gradient(135deg, #c8f8df, #8fe3bc);
+  box-shadow: 0 10px 40px rgba(52, 211, 153, 0.16);
+}
+
+.pulse-enter-button:hover {
+  box-shadow: 0 14px 46px rgba(52, 211, 153, 0.25);
+}
+
+.pulse-entry-card {
+  border: 1px solid rgba(225, 255, 241, 0.1);
+  background: linear-gradient(145deg, rgba(21, 34, 31, 0.82), rgba(12, 21, 20, 0.9));
+  box-shadow: 0 28px 100px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+}
+
+.pulse-entry-orbit,
+.pulse-prompt-icon {
+  position: relative;
+  display: inline-flex;
+  width: 52px;
+  height: 52px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(167, 243, 208, 0.17);
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.11), transparent 70%);
+}
+
+.pulse-entry-orbit::before,
+.pulse-prompt-icon::before {
+  position: absolute;
+  width: 33px;
+  height: 33px;
+  border: 1px solid rgba(167, 243, 208, 0.38);
+  border-radius: 9999px;
+  content: "";
+}
+
+.pulse-entry-orbit span,
+.pulse-prompt-icon span {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #a7f3d0;
+  box-shadow: 0 0 16px rgba(167, 243, 208, 0.9);
+}
+
+.pulse-feature-icon {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(167, 243, 208, 0.11);
+  border-radius: 12px;
+  background: rgba(167, 243, 208, 0.05);
+  color: rgba(167, 243, 208, 0.82);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+}
+
+.pulse-lock-mark {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: rgba(167, 243, 208, 0.08);
+  color: #a7f3d0;
+}
+
+.pulse-live-indicator {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 9999px;
+  background: #76e4ae;
+  box-shadow: 0 0 10px rgba(118, 228, 174, 0.8);
+  animation: pulse-breathe 2.2s ease-in-out infinite;
+}
+
+.pulse-live-indicator.pulse-muted {
+  background: #fbbf77;
+  box-shadow: 0 0 10px rgba(251, 191, 119, 0.6);
+}
+
+.pulse-spinner {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  flex: none;
+  border: 2px solid rgba(167, 243, 208, 0.25);
+  border-top-color: #a7f3d0;
+  border-radius: 9999px;
+  animation: pulse-spin 0.85s linear infinite;
+}
+
+.pulse-stage {
+  background: #07100f;
+}
+
+.pulse-map-vignette {
+  background:
+    linear-gradient(to bottom, rgba(4, 10, 9, 0.72), transparent 23%),
+    linear-gradient(to top, rgba(4, 10, 9, 0.56), transparent 24%),
+    radial-gradient(ellipse at center, transparent 48%, rgba(4, 10, 9, 0.34) 100%);
+}
+
+.pulse-topbar {
+  background: linear-gradient(to bottom, rgba(5, 11, 10, 0.55), transparent);
+}
+
+.pulse-presence-badge,
+.pulse-online-count,
+.pulse-notice,
+.pulse-request-pill {
+  border: 1px solid rgba(230, 255, 243, 0.1);
+  background: rgba(9, 17, 15, 0.7);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(18px);
+}
+
+.pulse-online-count {
+  background: rgba(9, 17, 15, 0.78);
+}
+
+.pulse-dot {
+  width: 13px;
+  height: 13px;
   padding: 0;
-  box-shadow: 0 0 0 rgba(255, 255, 255, 0.5);
-  animation: pulse-ring 2s ease-out infinite;
-  transition: transform 0.1s ease;
+  border: 2px solid rgba(239, 255, 247, 0.95);
+  border-radius: 9999px;
+  box-shadow: 0 0 0 rgba(167, 243, 208, 0.58);
+  cursor: pointer;
+  animation: pulse-ring 2.4s ease-out infinite;
+  transition: transform 0.15s ease, opacity 0.2s ease;
 }
 
-.pulse-dot:hover {
-  transform: scale(1.3);
+.pulse-dot:hover:not(:disabled) {
+  transform: scale(1.45);
 }
 
-/* The user's own "you are here" pin — small, sized like the dots. */
+.pulse-dot:disabled {
+  cursor: default;
+}
+
 .pulse-me {
   position: relative;
   font-size: 18px;
@@ -57,23 +288,98 @@ body {
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: 1px;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.68);
+  padding: 1px 6px;
+  color: #fff;
   font-size: 10px;
   font-weight: 700;
-  color: #ffffff;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 0 5px;
-  border-radius: 9999px;
   white-space: nowrap;
+}
+
+.pulse-prompt-backdrop {
+  background: rgba(2, 8, 7, 0.69);
+  backdrop-filter: blur(10px);
+}
+
+.pulse-prompt-card {
+  border: 1px solid rgba(230, 255, 243, 0.12);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(52, 211, 153, 0.1), transparent 55%),
+    linear-gradient(145deg, #111d1a, #0b1211);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.pulse-chat-panel {
+  border-left: 1px solid rgba(230, 255, 243, 0.1);
+  background: linear-gradient(160deg, rgba(13, 22, 20, 0.98), rgba(7, 13, 12, 0.99));
+  backdrop-filter: blur(22px);
+}
+
+.pulse-spark-card {
+  border: 1px solid rgba(167, 243, 208, 0.12);
+  background:
+    radial-gradient(ellipse at top left, rgba(52, 211, 153, 0.09), transparent 65%),
+    rgba(255, 255, 255, 0.025);
+}
+
+.pulse-video-panel {
+  background: #030605;
+}
+
+.pulse-video-controls {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(7, 13, 12, 0.96);
+}
+
+.pulse-local-video {
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
 }
 
 @keyframes pulse-ring {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 0 0 rgba(167, 243, 208, 0.5);
   }
-  70% {
-    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+  72% {
+    box-shadow: 0 0 0 9px rgba(167, 243, 208, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    box-shadow: 0 0 0 0 rgba(167, 243, 208, 0);
+  }
+}
+
+@keyframes pulse-breathe {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(0.88);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 639px) {
+  .pulse-online-count {
+    bottom: 16px;
+    left: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -27,18 +27,26 @@ export default function VideoPanel({
   }, [remoteStream]);
 
   return (
-    <div className="absolute inset-0 z-30 flex flex-col bg-black">
+    <div className="pulse-video-panel absolute inset-0 z-30 flex flex-col">
       <div className="relative flex-1">
+        <div className="absolute left-5 top-5 z-10 flex items-center gap-2 rounded-full border border-white/10 bg-black/35 px-4 py-2 text-xs text-white/80 backdrop-blur">
+          <span className="pulse-live-indicator" />
+          Private call
+        </div>
         {/* Remote (full screen) */}
         <video
           ref={remoteRef}
           autoPlay
           playsInline
+          aria-label="Stranger's video"
           className="h-full w-full bg-zinc-900 object-cover"
         />
         {!remoteStream && (
-          <div className="absolute inset-0 flex items-center justify-center text-zinc-500">
-            Waiting for stranger&rsquo;s video…
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-zinc-300">
+            <span className="pulse-prompt-icon" aria-hidden="true">
+              <span />
+            </span>
+            <span>Waiting for their video…</span>
           </div>
         )}
         {/* Local (picture-in-picture) */}
@@ -47,15 +55,16 @@ export default function VideoPanel({
           autoPlay
           playsInline
           muted
-          className="absolute bottom-4 right-4 h-40 w-28 rounded-lg border border-zinc-700 bg-zinc-800 object-cover"
+          aria-label="Your video preview"
+          className="pulse-local-video absolute bottom-5 right-5 h-40 w-28 rounded-2xl border border-white/20 bg-zinc-800 object-cover shadow-2xl sm:bottom-7 sm:right-7 sm:h-52 sm:w-36"
         />
       </div>
-      <div className="flex justify-center bg-zinc-950 p-4">
+      <div className="pulse-video-controls flex justify-center p-4">
         <button
           onClick={onEnd}
-          className="rounded-full bg-red-500 px-8 py-3 font-semibold text-white hover:bg-red-400"
+          className="rounded-full bg-rose-500 px-8 py-3 text-sm font-semibold text-white transition hover:bg-rose-400"
         >
-          End video
+          End call
         </button>
       </div>
     </div>
