@@ -60,7 +60,7 @@ export default function EntryGate({
         </span>
       </header>
 
-      <main className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center pb-16 pt-8 lg:flex-row lg:items-center lg:gap-20 lg:pb-24 lg:pt-4">
+      <main className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center py-8 lg:flex-row lg:items-center lg:gap-20 lg:py-4">
         <section className="max-w-2xl">
           <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-emerald-100/15 bg-emerald-100/[0.06] px-3 py-1.5 text-xs text-emerald-100/90">
             <span className="pulse-live-indicator" />
@@ -156,9 +156,6 @@ export default function EntryGate({
         </section>
       </main>
 
-      <footer className="relative mx-auto flex w-full max-w-7xl items-center justify-center border-t border-white/[0.07] py-4 text-[11px] text-zinc-600">
-        <span>Pulse · A world of hellos</span>
-      </footer>
     </div>
   );
 }
