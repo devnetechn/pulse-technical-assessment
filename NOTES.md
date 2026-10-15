@@ -28,4 +28,4 @@
 ## Assumptions and blockers
 
 - Kept the assessment’s STUN-only WebRTC setup; strict networks may still require TURN.
-- No working `DATABASE_URL`, Mapbox token, or Vercel project credentials were available here. The database push, live two-participant test, and Vercel deployment remain blocked on those credentials. GitHub publishing is available, and the public submission repository will be created separately from the assessment origin.
+- No working `DATABASE_URL`, Mapbox token, or Vercel project credentials were available here. The database push, live two-participant test, and Vercel deployment remain blocked on those credentials. The public submission repository was created separately from the assessment origin and pushed to `https://github.com/devnetechn/pulse-technical-assessment`.
